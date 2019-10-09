@@ -82,13 +82,15 @@ bool ConnectionManager::request(const char *requestData) {
   #endif
   // wait for data to be available
   unsigned long timeout = millis();
-  while (clientWiFi.available() == 0 && millis() - timeout > 5000) {
-    #ifdef DEBUG_SERIAL
-    Serial.println(">>> Client Timeout !");
-    #endif
-    clientWiFi.stop();
-    delay(60000);
-    return false;
+  while (clientWiFi.available() == 0) {
+    if (millis() - timeout > 5000) {
+      #ifdef DEBUG_SERIAL
+      Serial.println(">>> Client Timeout !");
+      #endif
+      clientWiFi.stop();
+      delay(60000);
+      return false;
+    }
   }
 
   uint16_t dataPos = 0;
