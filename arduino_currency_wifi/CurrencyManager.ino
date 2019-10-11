@@ -15,7 +15,7 @@ Vary: Accept-Encoding,User-Agent
 */
 
 CurrencyManager::CurrencyManager() {
-  for (int i = 0; i < CURRENCY_DIFF_SIZE; i++) {
+  for (uint8_t i = 0; i < CURRENCY_DIFF_SIZE; i++) {
     m_usdDiff[i] = 0;
     m_eurDiff[i] = 0;
   }
@@ -70,8 +70,8 @@ bool CurrencyManager::parseJSON(char *json) {
     *subJsonEnd = c;
     subJsonStart = strstr(subJsonEnd, "{");
   }
-  m_usd = m_usd + random(0,63) / 100;
-  m_eur = m_eur + random(0,63) / 100;
+  m_usd = m_usd + (float)(random(0,63)) / 100.0;
+  m_eur = m_eur + (float)(random(0,63)) / 100.0;
   if (m_lastUsd == 0) {
     m_lastUsd = m_usd;
   }
@@ -107,10 +107,10 @@ void CurrencyManager::saveUSD() {
   for (uint8_t i = 0; i < CURRENCY_DIFF_SIZE - 1; i++) {
     m_usdDiff[i] = m_usdDiff[i + 1];
   }
-  m_usdDiff[CURRENCY_DIFF_SIZE - 1] = (uint8_t)((m_lastUsd - m_usd) * 100);
+  m_usdDiff[CURRENCY_DIFF_SIZE - 1] = (uint8_t)((m_usd - m_lastUsd) * 100);
   #ifdef DEBUG_SERIAL
   Serial.print("m_usdDiff: ");
-  for (int i = 0; i < CURRENCY_DIFF_SIZE; i++) {
+  for (uint8_t i = 0; i < CURRENCY_DIFF_SIZE; i++) {
     Serial.print(m_usdDiff[i]);
     Serial.print(" ");
   }
@@ -122,7 +122,7 @@ void CurrencyManager::saveEUR() {
   for (uint8_t i = 0; i < CURRENCY_DIFF_SIZE - 1; i++) {
     m_eurDiff[i] = m_eurDiff[i + 1];
   }
-  m_eurDiff[CURRENCY_DIFF_SIZE - 1] = (uint8_t)((m_lastEur - m_eur) * 100);
+  m_eurDiff[CURRENCY_DIFF_SIZE - 1] = (uint8_t)((m_eur - m_lastEur) * 100);
   #ifdef DEBUG_SERIAL
   Serial.print("m_usdDiff: ");
   for (uint8_t i = 0; i < CURRENCY_DIFF_SIZE; i++) {

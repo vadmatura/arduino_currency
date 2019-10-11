@@ -3,7 +3,8 @@ ConnectionManager::ConnectionManager() {
   /* Explicitly set the ESP8266 to be a WiFi-client, otherwise, it by default,
      would try to act as both a client and an access-point and could cause
      network-issues with your other WiFi-devices on your WiFi-network. */
-  WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_OFF);
+  //WiFi.mode(WIFI_STA);
 }
 
 bool ConnectionManager::connectWiFi(const char *ssid, const char *password) {
@@ -91,6 +92,7 @@ bool ConnectionManager::request(const char *requestData) {
       delay(60000);
       return false;
     }
+    yield();
   }
 
   uint16_t dataPos = 0;
@@ -102,6 +104,7 @@ bool ConnectionManager::request(const char *requestData) {
       char ch = static_cast<char>(clientWiFi.read());
       data[dataPos] = ch;
       dataPos++;
+      yield();
     }
     delay(500);
     maxPackageQuantity--;
