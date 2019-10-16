@@ -1,3 +1,5 @@
+//"{\"$id\":\"1\",\"currentDateTime\":\"2019-10-07T14:10Z\",\"utcOffset\":\"00:00:00\",\"isDayLightSavingsTime\":false,\"dayOfTheWeek\":\"Monday\",\"timeZoneName\":\"UTC\",\"currentFileTime\":132149310448939833,\"ordinalDate\":\"2019-280\",\"serviceResponse\":null}"
+
 bool TimeManager::parseJSON(char *json) {
   m_hour = -1;
   m_dayOfWeek = -1;
