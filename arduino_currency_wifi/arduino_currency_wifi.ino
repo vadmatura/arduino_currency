@@ -7,9 +7,9 @@
 //#define DEBUG_SERIAL
 #define START_WORK_HOUR 9
 #define END_WORK_HOUR 19
-#define CURRENCY_DIFF_SIZE 32
+#define CURRENCY_DIFF_SIZE 40
 #define DATA_BUFFER_SIZE 8192
-#define MILLISECONDS_PER_HOUR 20000
+#define MILLISECONDS_PER_HOUR 30000
 #define MON "Monday"
 #define TUE "Tuesday"
 #define WED "Wednesday"
@@ -64,21 +64,6 @@ class CurrencyManager {
   void saveEUR();
 };
 
-/*class ScreenManager {
-  public:
-  void init();
-  void clear();
-  void printUSD();
-  void printEUR();
-  
-  private:
-  void setPosColor(uint8_t x, uint8_t y, uint8_t color);
-  void printUSDcurrency();
-  void printEURcurrency();
-  void printUSDdiff();
-  void printEURdiff();
-};*/
-
 //================main================
 
 ConnectionManager connectionManager;
@@ -129,14 +114,14 @@ void setup() {
   delay(1000);
 }
 
-unsigned long time1 = -1;
+unsigned long timeForDelay = -1;
 
 void loop() {
-  if (time1 == -1 || millis() - time1 > MILLISECONDS_PER_HOUR) {
-    time1 = millis();
+  if (timeForDelay == -1 || millis() - timeForDelay > MILLISECONDS_PER_HOUR) {
+    timeForDelay = millis();
     #ifdef DEBUG_SERIAL
     Serial.print("Time: ");
-    Serial.println(time1 / MILLISECONDS_PER_HOUR);
+    Serial.println(timeForDelay / MILLISECONDS_PER_HOUR);
     #endif
     if (true) {//connectionManager.connectWiFi(ssid, password)) {
       UpdateTime();
@@ -146,23 +131,30 @@ void loop() {
         Serial.print(currencyManager.getUSD());
         Serial.print(" ");
         for (uint8_t i = 0; i < CURRENCY_DIFF_SIZE; i++) {
-          Serial.print(currencyManager.getUSDdiff(i));
-          Serial.print(" ");
+          if ((uint8_t)currencyManager.getUSDdiff(i) < 0x10) {
+            Serial.print("0");
+          }
+          Serial.print((uint8_t)currencyManager.getUSDdiff(i), HEX);
+          delay(10);
         }
+        Serial.println();
         Serial.print("@");
         Serial.print(currencyManager.getEUR());
         Serial.print(" ");
         for (uint8_t i = 0; i < CURRENCY_DIFF_SIZE; i++) {
-          Serial.print(currencyManager.getEURdiff(i));
-          Serial.print(" ");
+          if ((uint8_t)currencyManager.getEURdiff(i) < 0x10) {
+            Serial.print("0");
+          }
+          Serial.print((uint8_t)currencyManager.getEURdiff(i), HEX);
+          delay(10);
         }
-        Serial.println();
+        Serial.println("#");
       }
       //connectionManager.disconnectWiFi();
     }
   }
-  if (millis() < time1) {
-    time1 = millis();
+  if (millis() < timeForDelay) {
+    timeForDelay = millis();
     #ifdef DEBUG_SERIAL
     Serial.println("New millis() cycle");
     #endif

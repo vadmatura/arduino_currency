@@ -70,8 +70,8 @@ bool CurrencyManager::parseJSON(char *json) {
     *subJsonEnd = c;
     subJsonStart = strstr(subJsonEnd, "{");
   }
-  m_usd = m_usd + (float)(random(0,63)) / 100.0;
-  m_eur = m_eur + (float)(random(0,63)) / 100.0;
+  m_usd = m_usd + (float)((uint8_t)(random(1,16) - 8)) / 100.0;
+  m_eur = m_eur + (float)((uint8_t)(random(1,16) - 8)) / 100.0;
   if (m_lastUsd == 0) {
     m_lastUsd = m_usd;
   }
